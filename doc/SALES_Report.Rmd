@@ -1,0 +1,184 @@
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<style type="text/css"> body {padding: 10px 30px 10px 30px;} table,th, td {text-align: center;} </style>
+
+Car Sales Forecast Regression Exercise
+========================================================
+
+**INSEAD MBA Course Big Data Project**<br>
+**Group Member**<br>
+Hu Yingtuo<br>
+James Wu<br>
+James Galvin<br>
+Victor Abramov<br>
+
+
+
+Case Description
+---------------------------------------------------------
+
+A car manufacturer wishes to forecast car sales for the coming year and to understand better the factors that influence them. The car company wants the forecast the sales to optimize its capacity utilization, staffing, purhasing as well as consider perseptives of re-focusing on international vs. domestic market.
+
+With this initial identification of the problem, the marketing manager sits down with the sales manager and others in her marketing organization to determine the factors that might affect the company's sales. They come up with the following model:
+
+
+```
+The manager believes that sales depend upon: GDP, personal disposable income, oil prices, unemployment rates, interest rate, housing price and metal price. and some random effects.
+```
+The marketing manager recognizes that some of these factors will have a more important effect than others on the company's sales; others may turn out to be unimportant. Since any one of them, however, may have an important impact, data are gathered on all of them at this early stage in the process.
+
+The Data
+---------------------------------------------------------
+
+This file SALES includes quarterly data, covering the period from 1986 through 2013, on 8 variables (7 independent variables and the dependent variable SALES). A list of the 8 variables is given below:
+
+1.US GDP <br>	
+2.Real personal disposable income per capita <br>
+3.Oil prices <br>
+4.Unemployment rate <br>
+5.Interest rate <br>
+6.Housing prices <br>
+7.Metal prices <br>
+
+
+<blockquote> <p>
+Find the most appropriate regression equation for SALES. How do you interpret this regression results you found?
+</p> </blockquote>
+
+
+The Analysis
+---------------------------------------------------------
+
+Let's first see some summary statistics. 
+
+<div class="row">
+<div class="col-md-6">
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+data_summary = my_summary(ProjectData[,union(dependent_variable,independent_variables),drop=F])
+print(xtable(data_summary, caption = "Summary Statistics", digits=3), type = "html", html.table.attributes = "class='table table-striped table-hover table-bordered'", caption.placement = "top", comment = FALSE, include.rownames = TRUE)
+```
+</div>
+</div>
+
+This is a histogram of our dependent variable `r dependent_variable`:
+
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+hist(ProjectData[,dependent_variable], main = paste("Histogram of", dependent_variable, sep=" "), xlab=dependent_variable,breaks = max(5,round(nrow(ProjectData)/5)))
+```
+
+
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+Sales = ProjectData[,dependent_variable]
+thedates=1:nrow(ProjectData)
+data.frame.series<-data.frame(Time=thedates, Values=Sales, row_names=rownames(ProjectData))
+```
+
+
+Let's now see the correlation between all our variables:
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+data_reorder=cbind(ProjectData[,independent_variables,drop=F],ProjectData[,dependent_variable,drop=F])
+thecor=round(cor(data_reorder),2)
+colnames(thecor)<-colnames(thecor)
+rownames(thecor)<-rownames(thecor)
+
+cat(renderHeatmapX(thecor, border=1))
+```
+
+and maybe a plot between our dependent variable and, say, the first independent variable `r colnames(ProjectData[,independent_variables,drop=F])[1]`:
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+yax=colnames(ProjectData[,independent_variables,drop=F])[1]
+plot(ProjectData[,yax],ProjectData[,dependent_variable], xlab=yax, ylab=dependent_variable)
+```
+
+One can generate more of these plots (e.g. using the web applicatin for this case).
+
+### Regression Model
+
+Let's try this **regression model**:
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+make_b <- function(i) paste("b", i, sep="")
+
+if (length(independent_variables) == 1){ 
+  regression_model_to_see = paste(dependent_variable, paste("b1",independent_variables,sep="*"), sep=" = ")
+  } else {
+    res=paste(make_b(1),independent_variables[1], sep="*")
+    for (iter in 2:(length(independent_variables)-1))
+      res=paste(res,paste(make_b(iter),independent_variables[iter],sep="*"), sep=" + ")
+    res=paste(res,paste(make_b(length(independent_variables)),tail(independent_variables,1),sep="*"), sep=" + ")
+    regression_model_to_see = paste(dependent_variable, res, sep=" = ")  
+    }
+cat(regression_model_to_see)
+```
+
+Let's see now the regression output for our choice of dependent and independent variables:
+
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+if (length(independent_variables) == 1){ 
+  regression_model=paste(paste(dependent_variable, "~",sep=""), independent_variables,sep="")
+  } else {
+    res=independent_variables[1]
+    for (iter in 2:(length(independent_variables)-1))
+      res=paste(res,independent_variables[iter],sep="+")
+    res=paste(res,tail(independent_variables,1),sep="+")
+    regression_model = paste(dependent_variable, res, sep="~")  
+    }
+
+the_fit<-lm(regression_model,data=ProjectData)
+print_the_fit<-as.list(summary(the_fit))
+fit_table<-xtable(summary(the_fit),caption=paste("Regression Analysis - Dependent variable",dependent_variable, sep=""))
+print(fit_table,type="html",html.table.attributes = "class='table table-striped table-hover table-bordered'",caption.placement="top")
+```
+
+Residual standard error: `r sqrt(deviance(the_fit)/df.residual(the_fit))` on `r the_fit$df` degrees of freedom<br>
+Multiple R-squared: `r print_the_fit$r.squared` ,  Adjusted R-squared: `r print_the_fit$adj.r.squared` <br>
+F-statistic: `r print_the_fit$fstatistic["value"]` on   `r print_the_fit$fstatistic["numdf"]` and `r print_the_fit$fstatistic["dendf"]` <br>
+p-value: `r pf(print_the_fit$fstatistic[1], print_the_fit$fstatistic[2], print_the_fit$fstatistic[3],lower.tail = FALSE)` <br><br>
+
+**Prediting future sales** <br>
+<font color="red">Now let's use our model to predict 2014 Q1 sales at 95% confidence interval.</font><br>
+
+Actual Sales of 2014 Q1 is 15.7 millions cars.
+As below, our model predited 15.9 millions, with 95% confidence interval.
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+   
+    newdata = data.frame(GDP=15831.7, INCOME=37.1,  OILP=98.8,	UNEMPLOY=6.8,	INT=0.1,	REALESTATE=160.3,	METALP=194.6)
+    sales_f <-  predict(the_fit, newdata, interval="prediction", level=0.95)
+    print(sales_f,type = "html", html.table.attributes = "class='table table-striped table-hover table-bordered'", caption.placement = "top", comment = FALSE, include.rownames = TRUE)
+
+```
+
+
+
+**Residual Analysis**
+
+Let's look now at the residuals. Here are some plots and statistics.
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+
+the_residuals = residuals(the_fit) 
+
+thedates=1:nrow(ProjectData)
+data.frame.series<-data.frame(Time=thedates, Residual=the_residuals, row_names=rownames(ProjectData))
+```
+
+Of course we can make various plots of the residuals to "spot" (visually for now) and heteroskedasticity or autocorrelation. For example this is the plot of the residuals against the dependent variable `r dependent_variable`:
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+plot(ProjectData[,dependent_variable],the_residuals,xlab=dependent_variable,ylab="Residuals")
+abline(0, 0, col="red")  
+```
+
+
+or the histogram of the residuals:
+
+```{r echo=FALSE, comment=NA, warning=FALSE, message=FALSE,results='asis'}
+hist(the_residuals, main = "Histogram of the Residuals", xlab=dependent_variable,breaks = max(5,round(length(the_residuals)/5)))
+```
+
+
+

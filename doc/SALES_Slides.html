@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sales Forecast Regression Exercise</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Sales Forecast Regression Exercise">
+  <meta name="author" content="INSEAD MBA Core Course UDJ">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="http://slidifylibraries2.googlecode.com/git/inst/libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/js/slides" 
+    src="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Sales Forecast Regression Exercise</h1>
+    <h2></h2>
+    <p>INSEAD MBA Core Course UDJ<br/>INSEAD</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>The Problem</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>A marketing manager wishes to forecast corporate sales for the coming year and to understand better the factors that influence them. </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Sales Drivers</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The manager believes that sales depend upon</p>
+
+<p>personal disposable income, dealers&#39; allowances prices, product development expenditures, capital investments, advertising, sales expenses, total industry advertising, and some random effects.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>The Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li><p>Personal Disposable Income in Millions of Dollars. (PDI)</p></li>
+<li><p>Dealers&#39; Allowances in Thousands of Dollars. (DEALS)</p></li>
+<li><p>Price in Dollars. (PRICE)</p></li>
+<li><p>Product Development in Thousands of Dollars. (R&amp;D)</p></li>
+<li><p>Capital Investments in Thousands of Dollars. (INVEST)</p></li>
+<li><p>Advertising in Thousands of Dollars. (ADVERTIS)</p></li>
+<li><p>Sales Expenses in Thousands of Dollars. (EXPENSE)</p></li>
+<li><p>Total Industry Advertising in Thousands of Dollars. (TOTINDAD)</p></li>
+<li><p>Company Sales in Thousands of Dollars. (SALES)</p></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Summary Statistics</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class="row">
+<div class="col-md-6">
+<table class='table table-striped table-hover table-bordered'>
+<caption align="top"> Summary Statistics </caption>
+<tr> <th>  </th> <th> SALES </th> <th> GDP </th> <th> INCOME </th> <th> OILP </th> <th> UNEMPLOY </th> <th> INT </th> <th> REALESTATE </th> <th> METALP </th>  </tr>
+  <tr> <td align="right"> min </td> <td align="right"> 9.300 </td> <td align="right"> 7784.100 </td> <td align="right"> 23.300 </td> <td align="right"> 12.900 </td> <td align="right"> 3.900 </td> <td align="right"> 0.000 </td> <td align="right"> 58.500 </td> <td align="right"> 94.600 </td> </tr>
+  <tr> <td align="right"> 25% </td> <td align="right"> 13.950 </td> <td align="right"> 9419.625 </td> <td align="right"> 26.200 </td> <td align="right"> 19.200 </td> <td align="right"> 5.000 </td> <td align="right"> 1.375 </td> <td align="right"> 77.150 </td> <td align="right"> 112.150 </td> </tr>
+  <tr> <td align="right"> median </td> <td align="right"> 15.100 </td> <td align="right"> 12341.150 </td> <td align="right"> 30.900 </td> <td align="right"> 25.400 </td> <td align="right"> 5.700 </td> <td align="right"> 4.300 </td> <td align="right"> 99.900 </td> <td align="right"> 134.950 </td> </tr>
+  <tr> <td align="right"> mean </td> <td align="right"> 14.896 </td> <td align="right"> 11937.911 </td> <td align="right"> 30.607 </td> <td align="right"> 40.819 </td> <td align="right"> 6.138 </td> <td align="right"> 3.612 </td> <td align="right"> 112.372 </td> <td align="right"> 154.834 </td> </tr>
+  <tr> <td align="right"> 75% </td> <td align="right"> 16.325 </td> <td align="right"> 14542.950 </td> <td align="right"> 35.300 </td> <td align="right"> 60.775 </td> <td align="right"> 7.025 </td> <td align="right"> 5.300 </td> <td align="right"> 145.875 </td> <td align="right"> 198.050 </td> </tr>
+  <tr> <td align="right"> max </td> <td align="right"> 18.500 </td> <td align="right"> 15916.200 </td> <td align="right"> 37.800 </td> <td align="right"> 123.900 </td> <td align="right"> 10.000 </td> <td align="right"> 8.500 </td> <td align="right"> 184.400 </td> <td align="right"> 311.900 </td> </tr>
+  <tr> <td align="right"> std </td> <td align="right"> 1.898 </td> <td align="right"> 2550.684 </td> <td align="right"> 4.550 </td> <td align="right"> 29.923 </td> <td align="right"> 1.539 </td> <td align="right"> 2.425 </td> <td align="right"> 38.516 </td> <td align="right"> 56.160 </td> </tr>
+   </table>
+</div>
+
+<p></div></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Histogram of the Dependent Variable SALES</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-2"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Time Series of Sales</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>An <strong>interactive chart</strong> of the SALES time series (Place the mouse on the plot to see daily values, and zoom using click-and-drag with the mouse in the smaller graph below)</p>
+
+<p><link rel='stylesheet' href=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css></p>
+
+<script type='text/javascript' src=//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js></script>
+
+<script type='text/javascript' src=//d3js.org/d3.v3.min.js></script>
+
+<script type='text/javascript' src=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js></script>
+
+<script type='text/javascript' src=//nvd3.org/assets/lib/fisheye.js></script> 
+
+<p><style>
+  .rChart {
+    display: block;
+    margin-left: auto; 
+    margin-right: auto;
+    width: 800px;
+    height: 400px;
+  }<br>
+  </style></p>
+
+<div id = 'chart15442b5e1f02' class = 'rChart nvd3'></div>
+
+<script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart15442b5e1f02()
+    });
+    function drawchart15442b5e1f02(){  
+      var opts = {
+ "dom": "chart15442b5e1f02",
+"width":    800,
+"height":    400,
+"x": "Time",
+"y": "Values",
+"id": "chart15442b5e1f02",
+"type": "lineWithFocusChart" 
+},
+        data = [
+ {
+ "Time": 1,
+"Values":           14.9,
+"row_names": "1" 
+},
+{
+ "Time": 2,
+"Values":           15.7,
+"row_names": "2" 
+},
+{
+ "Time": 3,
+"Values":           17.9,
+"row_names": "3" 
+},
+{
+ "Time": 4,
+"Values":           15.6,
+"row_names": "4" 
+},
+{
+ "Time": 5,
+"Values":             14,
+"row_names": "5" 
+},
+{
+ "Time": 6,
+"Values":           14.9,
+"row_names": "6" 
+},
+{
+ "Time": 7,
+"Values":           15.9,
+"row_names": "7" 
+},
+{
+ "Time": 8,
+"Values":           14.5,
+"row_names": "8" 
+},
+{
+ "Time": 9,
+"Values":           15.9,
+"row_names": "9" 
+},
+{
+ "Time": 10,
+"Values":           15.4,
+"row_names": "10" 
+},
+{
+ "Time": 11,
+"Values":             15,
+"row_names": "11" 
+},
+{
+ "Time": 12,
+"Values":           15.3,
+"row_names": "12" 
+},
+{
+ "Time": 13,
+"Values":           14.6,
+"row_names": "13" 
+},
+{
+ "Time": 14,
+"Values":           14.9,
+"row_names": "14" 
+},
+{
+ "Time": 15,
+"Values":           15.3,
+"row_names": "15" 
+},
+{
+ "Time": 16,
+"Values":           13.2,
+"row_names": "16" 
+},
+{
+ "Time": 17,
+"Values":           14.7,
+"row_names": "17" 
+},
+{
+ "Time": 18,
+"Values":           13.8,
+"row_names": "18" 
+},
+{
+ "Time": 19,
+"Values":           13.7,
+"row_names": "19" 
+},
+{
+ "Time": 20,
+"Values":             13,
+"row_names": "20" 
+},
+{
+ "Time": 21,
+"Values":           12.1,
+"row_names": "21" 
+},
+{
+ "Time": 22,
+"Values":           12.2,
+"row_names": "22" 
+},
+{
+ "Time": 23,
+"Values":           12.6,
+"row_names": "23" 
+},
+{
+ "Time": 24,
+"Values":           12.2,
+"row_names": "24" 
+},
+{
+ "Time": 25,
+"Values":           12.5,
+"row_names": "25" 
+},
+{
+ "Time": 26,
+"Values":           12.8,
+"row_names": "26" 
+},
+{
+ "Time": 27,
+"Values":           12.7,
+"row_names": "27" 
+},
+{
+ "Time": 28,
+"Values":           13.2,
+"row_names": "28" 
+},
+{
+ "Time": 29,
+"Values":           12.9,
+"row_names": "29" 
+},
+{
+ "Time": 30,
+"Values":           14.2,
+"row_names": "30" 
+},
+{
+ "Time": 31,
+"Values":           13.6,
+"row_names": "31" 
+},
+{
+ "Time": 32,
+"Values":           14.6,
+"row_names": "32" 
+},
+{
+ "Time": 33,
+"Values":             15,
+"row_names": "33" 
+},
+{
+ "Time": 34,
+"Values":           14.8,
+"row_names": "34" 
+},
+{
+ "Time": 35,
+"Values":           14.8,
+"row_names": "35" 
+},
+{
+ "Time": 36,
+"Values":           15.4,
+"row_names": "36" 
+},
+{
+ "Time": 37,
+"Values":           14.5,
+"row_names": "37" 
+},
+{
+ "Time": 38,
+"Values":           14.4,
+"row_names": "38" 
+},
+{
+ "Time": 39,
+"Values":           14.7,
+"row_names": "39" 
+},
+{
+ "Time": 40,
+"Values":           15.1,
+"row_names": "40" 
+},
+{
+ "Time": 41,
+"Values":           15.1,
+"row_names": "41" 
+},
+{
+ "Time": 42,
+"Values":           15.2,
+"row_names": "42" 
+},
+{
+ "Time": 43,
+"Values":             15,
+"row_names": "43" 
+},
+{
+ "Time": 44,
+"Values":             15,
+"row_names": "44" 
+},
+{
+ "Time": 45,
+"Values":           15.2,
+"row_names": "45" 
+},
+{
+ "Time": 46,
+"Values":           14.5,
+"row_names": "46" 
+},
+{
+ "Time": 47,
+"Values":           15.2,
+"row_names": "47" 
+},
+{
+ "Time": 48,
+"Values":           15.5,
+"row_names": "48" 
+},
+{
+ "Time": 49,
+"Values":           14.7,
+"row_names": "49" 
+},
+{
+ "Time": 50,
+"Values":           16.1,
+"row_names": "50" 
+},
+{
+ "Time": 51,
+"Values":           14.8,
+"row_names": "51" 
+},
+{
+ "Time": 52,
+"Values":           16.4,
+"row_names": "52" 
+},
+{
+ "Time": 53,
+"Values":           16.3,
+"row_names": "53" 
+},
+{
+ "Time": 54,
+"Values":           16.7,
+"row_names": "54" 
+},
+{
+ "Time": 55,
+"Values":           17.1,
+"row_names": "55" 
+},
+{
+ "Time": 56,
+"Values":           17.3,
+"row_names": "56" 
+},
+{
+ "Time": 57,
+"Values":           18.2,
+"row_names": "57" 
+},
+{
+ "Time": 58,
+"Values":           17.3,
+"row_names": "58" 
+},
+{
+ "Time": 59,
+"Values":           17.3,
+"row_names": "59" 
+},
+{
+ "Time": 60,
+"Values":           16.4,
+"row_names": "60" 
+},
+{
+ "Time": 61,
+"Values":           17.1,
+"row_names": "61" 
+},
+{
+ "Time": 62,
+"Values":           16.7,
+"row_names": "62" 
+},
+{
+ "Time": 63,
+"Values":             16,
+"row_names": "63" 
+},
+{
+ "Time": 64,
+"Values":           18.5,
+"row_names": "64" 
+},
+{
+ "Time": 65,
+"Values":           16.6,
+"row_names": "65" 
+},
+{
+ "Time": 66,
+"Values":           16.6,
+"row_names": "66" 
+},
+{
+ "Time": 67,
+"Values":           17.4,
+"row_names": "67" 
+},
+{
+ "Time": 68,
+"Values":           16.5,
+"row_names": "68" 
+},
+{
+ "Time": 69,
+"Values":           16.1,
+"row_names": "69" 
+},
+{
+ "Time": 70,
+"Values":           16.4,
+"row_names": "70" 
+},
+{
+ "Time": 71,
+"Values":           17.2,
+"row_names": "71" 
+},
+{
+ "Time": 72,
+"Values":           16.7,
+"row_names": "72" 
+},
+{
+ "Time": 73,
+"Values":           16.5,
+"row_names": "73" 
+},
+{
+ "Time": 74,
+"Values":           16.6,
+"row_names": "74" 
+},
+{
+ "Time": 75,
+"Values":             17,
+"row_names": "75" 
+},
+{
+ "Time": 76,
+"Values":           17.1,
+"row_names": "76" 
+},
+{
+ "Time": 77,
+"Values":           16.5,
+"row_names": "77" 
+},
+{
+ "Time": 78,
+"Values":           17.3,
+"row_names": "78" 
+},
+{
+ "Time": 79,
+"Values":           17.9,
+"row_names": "79" 
+},
+{
+ "Time": 80,
+"Values":           15.8,
+"row_names": "80" 
+},
+{
+ "Time": 81,
+"Values":           16.8,
+"row_names": "81" 
+},
+{
+ "Time": 82,
+"Values":           16.3,
+"row_names": "82" 
+},
+{
+ "Time": 83,
+"Values":           16.4,
+"row_names": "83" 
+},
+{
+ "Time": 84,
+"Values":           16.3,
+"row_names": "84" 
+},
+{
+ "Time": 85,
+"Values":           16.3,
+"row_names": "85" 
+},
+{
+ "Time": 86,
+"Values":           16.1,
+"row_names": "86" 
+},
+{
+ "Time": 87,
+"Values":           15.9,
+"row_names": "87" 
+},
+{
+ "Time": 88,
+"Values":           15.9,
+"row_names": "88" 
+},
+{
+ "Time": 89,
+"Values":           15.1,
+"row_names": "89" 
+},
+{
+ "Time": 90,
+"Values":           14.2,
+"row_names": "90" 
+},
+{
+ "Time": 91,
+"Values":             13,
+"row_names": "91" 
+},
+{
+ "Time": 92,
+"Values":           10.3,
+"row_names": "92" 
+},
+{
+ "Time": 93,
+"Values":            9.3,
+"row_names": "93" 
+},
+{
+ "Time": 94,
+"Values":            9.7,
+"row_names": "94" 
+},
+{
+ "Time": 95,
+"Values":           11.7,
+"row_names": "95" 
+},
+{
+ "Time": 96,
+"Values":           10.7,
+"row_names": "96" 
+},
+{
+ "Time": 97,
+"Values":           10.7,
+"row_names": "97" 
+},
+{
+ "Time": 98,
+"Values":           11.4,
+"row_names": "98" 
+},
+{
+ "Time": 99,
+"Values":           11.7,
+"row_names": "99" 
+},
+{
+ "Time": 100,
+"Values":           12.2,
+"row_names": "100" 
+},
+{
+ "Time": 101,
+"Values":           12.7,
+"row_names": "101" 
+},
+{
+ "Time": 102,
+"Values":           12.2,
+"row_names": "102" 
+},
+{
+ "Time": 103,
+"Values":           12.5,
+"row_names": "103" 
+},
+{
+ "Time": 104,
+"Values":           13.3,
+"row_names": "104" 
+},
+{
+ "Time": 105,
+"Values":           14.1,
+"row_names": "105" 
+},
+{
+ "Time": 106,
+"Values":           14.2,
+"row_names": "106" 
+},
+{
+ "Time": 107,
+"Values":           14.3,
+"row_names": "107" 
+},
+{
+ "Time": 108,
+"Values":           14.9,
+"row_names": "108" 
+},
+{
+ "Time": 109,
+"Values":           15.3,
+"row_names": "109" 
+},
+{
+ "Time": 110,
+"Values":           15.4,
+"row_names": "110" 
+},
+{
+ "Time": 111,
+"Values":           15.6,
+"row_names": "111" 
+},
+{
+ "Time": 112,
+"Values":           15.6,
+"row_names": "112" 
+} 
+]
+  
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+      
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+      
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+          
+         
+        
+          
+        
+
+        
+        
+        chart.yAxis
+  .showMaxMin(false)
+      
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Correlation Matrix</h2>
+  </hgroup>
+  <article data-timings="">
+    <table border="1" class="data table table-bordered table-condensed">
+  <thead class="thead">
+    <tr>
+      <th></th>
+      <th>GDP</th>
+      <th>INCOME</th>
+      <th>OILP</th>
+      <th>UNEMPLOY</th>
+      <th>INT</th>
+      <th>REALESTATE</th>
+      <th>METALP</th>
+      <th>SALES</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="right">GDP</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(0,255,0)">0.9967212</td>
+      <td align="right" style="background-color: rgb(44,255,44)">0.8264765</td>
+      <td align="right" style="background-color: rgb(208,255,208)">0.1838707</td>
+      <td align="right" style="background-color: rgb(255,60,60)">-0.7633324</td>
+      <td align="right" style="background-color: rgb(17,255,17)">0.9320485</td>
+      <td align="right" style="background-color: rgb(85,255,85)">0.667833</td>
+      <td align="right" style="background-color: rgb(246,255,246)">0.03897275</td>
+    </tr>
+    <tr>
+      <td align="right">INCOME</td>
+      <td align="right" style="background-color: rgb(0,255,0)">0.9967212</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(43,255,43)">0.8298585</td>
+      <td align="right" style="background-color: rgb(202,255,202)">0.2085953</td>
+      <td align="right" style="background-color: rgb(255,58,58)">-0.7727909</td>
+      <td align="right" style="background-color: rgb(16,255,16)">0.936482</td>
+      <td align="right" style="background-color: rgb(83,255,83)">0.6740549</td>
+      <td align="right" style="background-color: rgb(251,255,251)">0.01616752</td>
+    </tr>
+    <tr>
+      <td align="right">OILP</td>
+      <td align="right" style="background-color: rgb(44,255,44)">0.8264765</td>
+      <td align="right" style="background-color: rgb(43,255,43)">0.8298585</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(145,255,145)">0.43282</td>
+      <td align="right" style="background-color: rgb(255,83,83)">-0.6722721</td>
+      <td align="right" style="background-color: rgb(51,255,51)">0.8001413</td>
+      <td align="right" style="background-color: rgb(32,255,32)">0.8715116</td>
+      <td align="right" style="background-color: rgb(255,197,197)">-0.22811</td>
+    </tr>
+    <tr>
+      <td align="right">UNEMPLOY</td>
+      <td align="right" style="background-color: rgb(208,255,208)">0.1838707</td>
+      <td align="right" style="background-color: rgb(202,255,202)">0.2085953</td>
+      <td align="right" style="background-color: rgb(145,255,145)">0.43282</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(255,99,99)">-0.6102062</td>
+      <td align="right" style="background-color: rgb(230,255,230)">0.09881978</td>
+      <td align="right" style="background-color: rgb(193,255,193)">0.2449737</td>
+      <td align="right" style="background-color: rgb(255,66,66)">-0.7386818</td>
+    </tr>
+    <tr>
+      <td align="right">INT</td>
+      <td align="right" style="background-color: rgb(255,60,60)">-0.7633324</td>
+      <td align="right" style="background-color: rgb(255,58,58)">-0.7727909</td>
+      <td align="right" style="background-color: rgb(255,83,83)">-0.6722721</td>
+      <td align="right" style="background-color: rgb(255,99,99)">-0.6102062</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(255,92,92)">-0.6383089</td>
+      <td align="right" style="background-color: rgb(255,162,162)">-0.3650987</td>
+      <td align="right" style="background-color: rgb(194,255,194)">0.241304</td>
+    </tr>
+    <tr>
+      <td align="right">REALESTATE</td>
+      <td align="right" style="background-color: rgb(17,255,17)">0.9320485</td>
+      <td align="right" style="background-color: rgb(16,255,16)">0.936482</td>
+      <td align="right" style="background-color: rgb(51,255,51)">0.8001413</td>
+      <td align="right" style="background-color: rgb(230,255,230)">0.09881978</td>
+      <td align="right" style="background-color: rgb(255,92,92)">-0.6383089</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(70,255,70)">0.7248123</td>
+      <td align="right" style="background-color: rgb(236,255,236)">0.07490016</td>
+    </tr>
+    <tr>
+      <td align="right">METALP</td>
+      <td align="right" style="background-color: rgb(85,255,85)">0.667833</td>
+      <td align="right" style="background-color: rgb(83,255,83)">0.6740549</td>
+      <td align="right" style="background-color: rgb(32,255,32)">0.8715116</td>
+      <td align="right" style="background-color: rgb(193,255,193)">0.2449737</td>
+      <td align="right" style="background-color: rgb(255,162,162)">-0.3650987</td>
+      <td align="right" style="background-color: rgb(70,255,70)">0.7248123</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+      <td align="right" style="background-color: rgb(255,192,192)">-0.2493988</td>
+    </tr>
+    <tr>
+      <td align="right">SALES</td>
+      <td align="right" style="background-color: rgb(246,255,246)">0.03897275</td>
+      <td align="right" style="background-color: rgb(251,255,251)">0.01616752</td>
+      <td align="right" style="background-color: rgb(255,197,197)">-0.22811</td>
+      <td align="right" style="background-color: rgb(255,66,66)">-0.7386818</td>
+      <td align="right" style="background-color: rgb(194,255,194)">0.241304</td>
+      <td align="right" style="background-color: rgb(236,255,236)">0.07490016</td>
+      <td align="right" style="background-color: rgb(255,192,192)">-0.2493988</td>
+      <td align="right" style="background-color: rgb(0,255,0)">1.00</td>
+    </tr>
+  </tbody>
+</table>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Just one of the many possible plots...</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-5"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Our Regression Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>SALES = b1*GDP + b2*INCOME + b3*OILP + b4*UNEMPLOY + b5*INT + b6*REALESTATE + b7*METALP</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Regression Output</h2>
+  </hgroup>
+  <article data-timings="">
+    <!-- html table generated in R 3.1.2 by xtable 1.7-4 package -->
+
+<!-- Thu Feb 19 23:39:12 2015 -->
+
+<table class='table table-striped table-hover table-bordered'>
+<caption align="top"> Regression Analysis - Dependent variableSALES </caption>
+<tr> <th>  </th> <th> Estimate </th> <th> Std. Error </th> <th> t value </th> <th> Pr(&gt;|t|) </th>  </tr>
+  <tr> <td align="right"> (Intercept) </td> <td align="right"> 25.1445 </td> <td align="right"> 3.9103 </td> <td align="right"> 6.43 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> GDP </td> <td align="right"> 0.0000 </td> <td align="right"> 0.0006 </td> <td align="right"> 0.03 </td> <td align="right"> 0.9737 </td> </tr>
+  <tr> <td align="right"> INCOME </td> <td align="right"> -0.0915 </td> <td align="right"> 0.3284 </td> <td align="right"> -0.28 </td> <td align="right"> 0.7812 </td> </tr>
+  <tr> <td align="right"> OILP </td> <td align="right"> 0.0382 </td> <td align="right"> 0.0124 </td> <td align="right"> 3.08 </td> <td align="right"> 0.0026 </td> </tr>
+  <tr> <td align="right"> UNEMPLOY </td> <td align="right"> -1.1146 </td> <td align="right"> 0.1420 </td> <td align="right"> -7.85 </td> <td align="right"> 0.0000 </td> </tr>
+  <tr> <td align="right"> INT </td> <td align="right"> -0.1035 </td> <td align="right"> 0.1321 </td> <td align="right"> -0.78 </td> <td align="right"> 0.4351 </td> </tr>
+  <tr> <td align="right"> REALESTATE </td> <td align="right"> 0.0125 </td> <td align="right"> 0.0091 </td> <td align="right"> 1.37 </td> <td align="right"> 0.1723 </td> </tr>
+  <tr> <td align="right"> METALP </td> <td align="right"> -0.0221 </td> <td align="right"> 0.0053 </td> <td align="right"> -4.19 </td> <td align="right"> 0.0001 </td> </tr>
+   </table>
+
+<p>R-squared: 0.6779456 ,  Adjusted R-squared: 0.6562689 </p>
+
+<p>F-statistic: 31.2752625 with   7 and 104 degrees of freedom </p>
+
+<p>Residual standard error: 1.1130373 with 104 degrees of freedom</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>The Residuals Plot (Time Series)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><link rel='stylesheet' href=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.css></p>
+
+<script type='text/javascript' src=//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js></script>
+
+<script type='text/javascript' src=//d3js.org/d3.v3.min.js></script>
+
+<script type='text/javascript' src=//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.15-beta/nv.d3.min.js></script>
+
+<script type='text/javascript' src=//nvd3.org/assets/lib/fisheye.js></script> 
+
+<p><style>
+  .rChart {
+    display: block;
+    margin-left: auto; 
+    margin-right: auto;
+    width: 800px;
+    height: 400px;
+  }<br>
+  </style></p>
+
+<div id = 'chart15447ede7be' class = 'rChart nvd3'></div>
+
+<script type='text/javascript'>
+ $(document).ready(function(){
+      drawchart15447ede7be()
+    });
+    function drawchart15447ede7be(){  
+      var opts = {
+ "dom": "chart15447ede7be",
+"width":    800,
+"height":    400,
+"x": "Time",
+"y": "Residual",
+"id": "chart15447ede7be",
+"type": "lineWithFocusChart" 
+},
+        data = [
+ {
+ "Time": 1,
+"Residual":  1.07859706737,
+"row_names": "1" 
+},
+{
+ "Time": 2,
+"Residual":  2.04637824614,
+"row_names": "2" 
+},
+{
+ "Time": 3,
+"Residual": 3.972079265528,
+"row_names": "3" 
+},
+{
+ "Time": 4,
+"Residual": 1.487321241924,
+"row_names": "4" 
+},
+{
+ "Time": 5,
+"Residual": -0.4332320202168,
+"row_names": "5" 
+},
+{
+ "Time": 6,
+"Residual": 0.07275620591867,
+"row_names": "6" 
+},
+{
+ "Time": 7,
+"Residual": 0.983679094726,
+"row_names": "7" 
+},
+{
+ "Time": 8,
+"Residual": -0.1078309033358,
+"row_names": "8" 
+},
+{
+ "Time": 9,
+"Residual": 1.339852696688,
+"row_names": "9" 
+},
+{
+ "Time": 10,
+"Residual": 0.7994988248412,
+"row_names": "10" 
+},
+{
+ "Time": 11,
+"Residual": 0.6980130145172,
+"row_names": "11" 
+},
+{
+ "Time": 12,
+"Residual": 1.341252547677,
+"row_names": "12" 
+},
+{
+ "Time": 13,
+"Residual": 0.4899718751822,
+"row_names": "13" 
+},
+{
+ "Time": 14,
+"Residual": 0.5304107960743,
+"row_names": "14" 
+},
+{
+ "Time": 15,
+"Residual": 0.5628998854757,
+"row_names": "15" 
+},
+{
+ "Time": 16,
+"Residual": -1.545875554418,
+"row_names": "16" 
+},
+{
+ "Time": 17,
+"Residual": -0.4440580365296,
+"row_names": "17" 
+},
+{
+ "Time": 18,
+"Residual": -0.9327677785773,
+"row_names": "18" 
+},
+{
+ "Time": 19,
+"Residual": -0.9386798478937,
+"row_names": "19" 
+},
+{
+ "Time": 20,
+"Residual": -1.476213800118,
+"row_names": "20" 
+},
+{
+ "Time": 21,
+"Residual": -1.864153843756,
+"row_names": "21" 
+},
+{
+ "Time": 22,
+"Residual": -1.609477326701,
+"row_names": "22" 
+},
+{
+ "Time": 23,
+"Residual": -1.405593547324,
+"row_names": "23" 
+},
+{
+ "Time": 24,
+"Residual": -1.582999006557,
+"row_names": "24" 
+},
+{
+ "Time": 25,
+"Residual": -0.9462301698426,
+"row_names": "25" 
+},
+{
+ "Time": 26,
+"Residual": -0.5529352534702,
+"row_names": "26" 
+},
+{
+ "Time": 27,
+"Residual": -0.4976828996754,
+"row_names": "27" 
+},
+{
+ "Time": 28,
+"Residual": -0.3436021753064,
+"row_names": "28" 
+},
+{
+ "Time": 29,
+"Residual": -1.016311920473,
+"row_names": "29" 
+},
+{
+ "Time": 30,
+"Residual": 0.002557127486011,
+"row_names": "30" 
+},
+{
+ "Time": 31,
+"Residual": -0.7621392010309,
+"row_names": "31" 
+},
+{
+ "Time": 32,
+"Residual": -0.03222474566256,
+"row_names": "32" 
+},
+{
+ "Time": 33,
+"Residual": 0.4548722064136,
+"row_names": "33" 
+},
+{
+ "Time": 34,
+"Residual": -0.002652465287543,
+"row_names": "34" 
+},
+{
+ "Time": 35,
+"Residual": 0.09196843734476,
+"row_names": "35" 
+},
+{
+ "Time": 36,
+"Residual": 0.7757313774157,
+"row_names": "36" 
+},
+{
+ "Time": 37,
+"Residual": 0.1876602583545,
+"row_names": "37" 
+},
+{
+ "Time": 38,
+"Residual": 0.1025899155661,
+"row_names": "38" 
+},
+{
+ "Time": 39,
+"Residual": 0.4556703411604,
+"row_names": "39" 
+},
+{
+ "Time": 40,
+"Residual": 0.5908286892351,
+"row_names": "40" 
+},
+{
+ "Time": 41,
+"Residual": 0.3288949239992,
+"row_names": "41" 
+},
+{
+ "Time": 42,
+"Residual": 0.2720948936723,
+"row_names": "42" 
+},
+{
+ "Time": 43,
+"Residual": -0.5487461003108,
+"row_names": "43" 
+},
+{
+ "Time": 44,
+"Residual": -0.6904220869583,
+"row_names": "44" 
+},
+{
+ "Time": 45,
+"Residual": -0.1309602039608,
+"row_names": "45" 
+},
+{
+ "Time": 46,
+"Residual": -0.9961946703167,
+"row_names": "46" 
+},
+{
+ "Time": 47,
+"Residual": -0.4695438625559,
+"row_names": "47" 
+},
+{
+ "Time": 48,
+"Residual": -0.5445307691998,
+"row_names": "48" 
+},
+{
+ "Time": 49,
+"Residual": -1.351724983731,
+"row_names": "49" 
+},
+{
+ "Time": 50,
+"Residual": -0.3115309418109,
+"row_names": "50" 
+},
+{
+ "Time": 51,
+"Residual": -1.638357779542,
+"row_names": "51" 
+},
+{
+ "Time": 52,
+"Residual": -0.2384183313543,
+"row_names": "52" 
+},
+{
+ "Time": 53,
+"Residual": -0.5781427769009,
+"row_names": "53" 
+},
+{
+ "Time": 54,
+"Residual": -0.4252293073015,
+"row_names": "54" 
+},
+{
+ "Time": 55,
+"Residual": 0.005299348423117,
+"row_names": "55" 
+},
+{
+ "Time": 56,
+"Residual": 0.1498277076828,
+"row_names": "56" 
+},
+{
+ "Time": 57,
+"Residual": 0.9990211034779,
+"row_names": "57" 
+},
+{
+ "Time": 58,
+"Residual": -0.1189740071354,
+"row_names": "58" 
+},
+{
+ "Time": 59,
+"Residual": 0.001195892228286,
+"row_names": "59" 
+},
+{
+ "Time": 60,
+"Residual": -1.067716914384,
+"row_names": "60" 
+},
+{
+ "Time": 61,
+"Residual": -0.06764201602715,
+"row_names": "61" 
+},
+{
+ "Time": 62,
+"Residual": -0.4647102050697,
+"row_names": "62" 
+},
+{
+ "Time": 63,
+"Residual": -0.8322295044131,
+"row_names": "63" 
+},
+{
+ "Time": 64,
+"Residual": 2.388738150226,
+"row_names": "64" 
+},
+{
+ "Time": 65,
+"Residual": 0.8817336150556,
+"row_names": "65" 
+},
+{
+ "Time": 66,
+"Residual": 0.6864097431127,
+"row_names": "66" 
+},
+{
+ "Time": 67,
+"Residual": 1.129816441557,
+"row_names": "67" 
+},
+{
+ "Time": 68,
+"Residual": 0.427161427787,
+"row_names": "68" 
+},
+{
+ "Time": 69,
+"Residual": -0.1764366103515,
+"row_names": "69" 
+},
+{
+ "Time": 70,
+"Residual": 0.5916216987653,
+"row_names": "70" 
+},
+{
+ "Time": 71,
+"Residual": 1.256865723934,
+"row_names": "71" 
+},
+{
+ "Time": 72,
+"Residual": 0.6584370032683,
+"row_names": "72" 
+},
+{
+ "Time": 73,
+"Residual": 0.4079882782696,
+"row_names": "73" 
+},
+{
+ "Time": 74,
+"Residual": 0.3040081279643,
+"row_names": "74" 
+},
+{
+ "Time": 75,
+"Residual": 0.3112704253892,
+"row_names": "75" 
+},
+{
+ "Time": 76,
+"Residual": 0.4822942131227,
+"row_names": "76" 
+},
+{
+ "Time": 77,
+"Residual": -0.1430455884887,
+"row_names": "77" 
+},
+{
+ "Time": 78,
+"Residual": 0.2778205582222,
+"row_names": "78" 
+},
+{
+ "Time": 79,
+"Residual": 0.4442771637648,
+"row_names": "79" 
+},
+{
+ "Time": 80,
+"Residual": -1.024001845994,
+"row_names": "80" 
+},
+{
+ "Time": 81,
+"Residual": 0.1197051288784,
+"row_names": "81" 
+},
+{
+ "Time": 82,
+"Residual": 0.4399041289913,
+"row_names": "82" 
+},
+{
+ "Time": 83,
+"Residual": 0.503908326041,
+"row_names": "83" 
+},
+{
+ "Time": 84,
+"Residual": 0.7071818532469,
+"row_names": "84" 
+},
+{
+ "Time": 85,
+"Residual": 0.8502290040711,
+"row_names": "85" 
+},
+{
+ "Time": 86,
+"Residual": 1.094521114376,
+"row_names": "86" 
+},
+{
+ "Time": 87,
+"Residual": 0.5327017104369,
+"row_names": "87" 
+},
+{
+ "Time": 88,
+"Residual": -0.1673654259774,
+"row_names": "88" 
+},
+{
+ "Time": 89,
+"Residual": -0.6347317641255,
+"row_names": "89" 
+},
+{
+ "Time": 90,
+"Residual": -1.618568988545,
+"row_names": "90" 
+},
+{
+ "Time": 91,
+"Residual": -2.341264252736,
+"row_names": "91" 
+},
+{
+ "Time": 92,
+"Residual": -3.718470837218,
+"row_names": "92" 
+},
+{
+ "Time": 93,
+"Residual": -3.313351626608,
+"row_names": "93" 
+},
+{
+ "Time": 94,
+"Residual": -2.606425664829,
+"row_names": "94" 
+},
+{
+ "Time": 95,
+"Residual": 0.002149829632544,
+"row_names": "95" 
+},
+{
+ "Time": 96,
+"Residual": -0.4733722482959,
+"row_names": "96" 
+},
+{
+ "Time": 97,
+"Residual": -0.6176745349312,
+"row_names": "97" 
+},
+{
+ "Time": 98,
+"Residual": -0.04354684773238,
+"row_names": "98" 
+},
+{
+ "Time": 99,
+"Residual": -0.02663236784981,
+"row_names": "99" 
+},
+{
+ "Time": 100,
+"Residual": 1.017122284423,
+"row_names": "100" 
+},
+{
+ "Time": 101,
+"Residual": 1.104194212508,
+"row_names": "101" 
+},
+{
+ "Time": 102,
+"Residual": 0.2113150521751,
+"row_names": "102" 
+},
+{
+ "Time": 103,
+"Residual": 0.8481936218073,
+"row_names": "103" 
+},
+{
+ "Time": 104,
+"Residual": 0.4212466845554,
+"row_names": "104" 
+},
+{
+ "Time": 105,
+"Residual": 0.7228323814948,
+"row_names": "105" 
+},
+{
+ "Time": 106,
+"Residual": 0.7399999483897,
+"row_names": "106" 
+},
+{
+ "Time": 107,
+"Residual": 0.6573983023232,
+"row_names": "107" 
+},
+{
+ "Time": 108,
+"Residual": 1.569846130555,
+"row_names": "108" 
+},
+{
+ "Time": 109,
+"Residual": 1.408494122687,
+"row_names": "109" 
+},
+{
+ "Time": 110,
+"Residual": 0.7348738882632,
+"row_names": "110" 
+},
+{
+ "Time": 111,
+"Residual": 0.1301673727777,
+"row_names": "111" 
+},
+{
+ "Time": 112,
+"Residual": -0.01072709176328,
+"row_names": "112" 
+} 
+]
+  
+      if(!(opts.type==="pieChart" || opts.type==="sparklinePlus" || opts.type==="bulletChart")) {
+        var data = d3.nest()
+          .key(function(d){
+            //return opts.group === undefined ? 'main' : d[opts.group]
+            //instead of main would think a better default is opts.x
+            return opts.group === undefined ? opts.y : d[opts.group];
+          })
+          .entries(data);
+      }
+      
+      if (opts.disabled != undefined){
+        data.map(function(d, i){
+          d.disabled = opts.disabled[i]
+        })
+      }
+      
+      nv.addGraph(function() {
+        var chart = nv.models[opts.type]()
+          .width(opts.width)
+          .height(opts.height)
+          
+        if (opts.type != "bulletChart"){
+          chart
+            .x(function(d) { return d[opts.x] })
+            .y(function(d) { return d[opts.y] })
+        }
+          
+         
+        
+          
+        
+
+        
+        
+        chart.yAxis
+  .showMaxMin(false)
+      
+       d3.select("#" + opts.id)
+        .append('svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+       nv.utils.windowResize(chart.update);
+       return chart;
+      });
+    };
+</script>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>One of the many Residual plots...</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-9"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>Histogram of the Residuals</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAAhFBMVEUAAAAAADoAAGYAOjoAOpAAZpAAZrY6AAA6ADo6AGY6OmY6OpA6ZrY6kJA6kNtmAABmADpmAGZmOgBmOpBmZjpmZmZmtrZmtv+QOgCQOjqQOmaQtpCQ27aQ29uQ2/+2ZgC225C2/7a2///bkDrb/7bb/9vb////tmb/25D//7b//9v///+gGfCPAAAACXBIWXMAAAsSAAALEgHS3X78AAAOhUlEQVR4nO2d62KbSBJGcZKVJ+tZeWYvYyW7sXatGevC+7/f0lxkyRYIaapLVdQ5P2LnQwUNRw2NwKIoISTFrRsAtwHxQUF8UBAfFMQHBfFBQXxQEB8UxAcF8UFBfFAQHxTEBwXxQUF8UBAfFMQHBfFBQXxQEB8UxAcF8UFBfFAQHxTEB8WT+O3jp5ey3C0+vTS/dSyf/sRMN/fF3XM3mzTvU8stEqcnten28ctr/1SD+BR/FC+LPyN+X51+GRRfnFB78BrEZ+Ndj6/6atULd4tKyawsV9WPeZkmF5/+V1nYLe7+WfXldRVXPXpd/KXKX6oXdW+S5vV1dVLWzKaa93/vm66dpj8dLrf5t4ubhTdhqv2tXmSdVLNrl3rQzNtssQH8im/64Zc/GvHLuk/OGoGf75OFNPX35kWv66KjddC+/oP4djbt9PnBcut/u7hd+GsK26ID8YdTu99vueFO4Ut85y5t0c19uzXTPnpzX3ewu+fNfbXxV7WF5K8p+/SyLlJB8ZRekrL969/v6iupacb1zLsdf7fcWbmPu4U3Ddkvsuvx7ZSjZhrDr/j6f8lMMrauLa+Kp/qXbbOrf+6KkvhZ2fTOJt2//r34+v2w30O8zaLZw+/jbuHNm2q/yL34ZqlHzTSGL/EfjvFF22f7xNev2Yt/ezv0im/VvRNf+5sfiO8Wflp8t9SjZhrDsfjEslV3alefNvaq3nV/FN+7q9+rO9hBd/6eyuP99jIdOo529dVL0i/dUo+aaQy/4rtulQZcJwd3SfG6ON3j968/FF+P6tud9fLgBK4bz+8Hd8d9ej+420/tlnrUTGP4FV/vQ9vdebXRu9O5ap/cnc4lxZWLeXsEOBK/f/1efJrNH29H6eXbWLxbbjfaT3G78P3p3N9SUTqe/9a+bdJSj5ppDE/iR7M2ePpkjamJb0fg81u3wzxTE98c1We3boV9JicexoH4oCA+KIgPCuKDgvigID4oiA8K4oOC+KAgPiiIDwrig4L4oCA+KIgPCuKDgvigID4oiA8K4oOC+KAgPiiIDwrig4L4oCA+KIgPCuKDgvigID4oiA8K4oOC+D1FH7duWBamuVZX0bcpprmJprlWV4H4oCA+KIgPCuKDgvigIP6I7a8v9feETv/bYRF/RCU+uS83P2s055Yg/ojK+ubhten50wbxR2wf7358Tz3+Yer7esS/o/6G/rW9ZyxIg/igIP5szTQvWyH+mPapuycGdxPbIog/YrdIT+WaI35ijPoApyyXM8RPi1E9vmL1+Svip8T5tdo+1o90Wn08n5vYFkG8Rq1BEK9RaxDEa9QaBPEatQZBvEatQRCvUWsQxGvUGgTxGrUGQbxGrUEQr1FrEMRr1BoE8Rq1BkG8Rq1BEK9RaxDEa9QaBPEatQZBvEatQRCvUWsQxGvUGgTxGrUGQbxGrUEQr1FrEMRr1BoE8Rq1BkG8Rq1BEK9RaxDEa9QaBPEatQZBvEatQRCvUWsQxGvUGgTxGrUGQbxGrUEQr1F7Qy596JDT1TxDRPFCuW8Qf3XuG8RfnfsG8VfnvkH81blvEH917hvEX537BvFX575B/NW5bxB/de4bxF+d+wbxV+e+Qfz5/MKLOj5AvHjuA8SL5z5AvHjuA8SL5z5AvHjuA8SL5z5AvHjug/Ot39zXJ60nnibtdM0Rnzjb+vaBg+X6y4fnxztdc8Qnzra+e7TodB4xivgEPV4898H51m8fOcZflPuAUb147oNrWu/88hTiE6NO5+6eGdyNz30wanC3W8wRPzr3wcjTueUM8WNzH4w9nVt9/or4cbkPxpzOzdOP1cfzOadrjvgEp3PiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHiuQ8QL577APHi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" alt="plot of chunk unnamed-chunk-10"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='The Problem'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Sales Drivers'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Data'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Summary Statistics'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Histogram of the Dependent Variable SALES'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Time Series of Sales'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Correlation Matrix'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Just one of the many possible plots...'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Our Regression Model'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Regression Output'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='The Residuals Plot (Time Series)'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='One of the many Residual plots...'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Histogram of the Residuals'>
+         13
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="http://slidifylibraries2.googlecode.com/git/inst/libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
